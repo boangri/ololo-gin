@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http"
 	"github.com/boangri/ololo-gin/controllers"
 
 	"github.com/gin-gonic/gin"
@@ -20,6 +21,13 @@ func main() {
 	server.GET("/services", controllers.ServicesPage)
 	server.GET("/portfolio", controllers.PortfolioPage)
 	server.GET("/contacts", controllers.ContactsPage)
+	server.NoRoute(func(c *gin.Context) {
+		// c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
+		data := gin.H{
+			"title": "404",
+		}
+		c.HTML(http.StatusNotFound, "404.html", data)
+	})
 
 	server.Run(":8080")
 }

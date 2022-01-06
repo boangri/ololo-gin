@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ololo-gin
+  name: ololo-gin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ololo-gin
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: ololo-gin
+    spec:
+      containers:
+      - image: boangri/ololo-gin:latest
+        name: ololo-gin
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ololo-gin
+spec:
+  selector:
+    app: ololo-gin
+  # type: LoadBalancer
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ololo-gin
+  labels:
+    name: ololo-gin
+spec:
+  rules:
+  - host: ololo-gin.loc
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: ololo-gin
+            port: 
+              number: 8080
